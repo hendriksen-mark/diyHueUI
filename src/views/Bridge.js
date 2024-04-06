@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from 'react-hot-toast';
 import Select from "react-select"
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+import { Tooltip } from '@mui/material';
+import { saveAs } from 'file-saver';
 
 const Bridge = ({ HOST_IP, API_KEY }) => {
   const [bridgeName, setBridgeName] = useState("");
@@ -12,6 +16,11 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
   const [timezone, setTimezone] = useState("");
   const [timezones, setTimezones] = useState([]);
   const [readonlyConf, setReadonlyConf] = useState({});
+  const [sysname, setSysname] = useState("");
+  const [machine, setMachine] = useState("");
+  const [os_version, setOs_version] = useState("");
+  const [os_release, setOs_release] = useState("");
+  const [diyhue, setDiyhue] = useState("");
 
   useEffect(() => {
     const fetchTimezones = () => {
@@ -39,6 +48,19 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
         setRemoteApi(result.data["Remote API enabled"]);
         setTimezone(result.data["timezone"]);
         setReadonlyConf(result.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    axios
+      .get(`${HOST_IP}/info`)
+      .then((result) => {
+        console.log(result.data);
+        setSysname(result.data["sysname"]);
+        setMachine(result.data["machine"]);
+        setOs_version(result.data["os_version"]);
+        setOs_release(result.data["os_release"]);
+        setDiyhue(result.data["diyhue"]);
       })
       .catch((error) => {
         console.error(error);
@@ -79,6 +101,130 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
       });
   };
 
+  const backupConfig = () => {
+    axios
+      .get(`${HOST_IP}/save?backup=True`)
+      .then(() => {
+        toast.success("Backup to local disk");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
+
+  const downloadConfig = () => {
+    axios
+      .get(`${HOST_IP}/download_config`, { responseType: 'blob' })
+      .then((response) => {
+        saveAs(response.data, "config.tar.gz");
+        toast.success("Download config tar");
+
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
+
+  const ConfigOptions = () => {
+    confirmAlert({
+      title: "Force Config Dump Options",
+      message: "Where do you want to save config?",
+      buttons: [
+        {
+          label: "DiyHue local",
+          onClick: () => dumpConfig(),
+        },
+        {
+          label: "DiyHue backup",
+          onClick: () => backupConfig(),
+        },
+        {
+          label: "Download tar.gz",
+          onClick: () => downloadConfig(),
+        },
+        {
+          label: "Cancel",
+        },
+      ],
+    });
+  };
+
+  const Restart = () => {
+    axios
+      .get(`${HOST_IP}/restart`)
+      .then(() => {
+        toast.success("Restart Python");
+      })
+      .catch((error) => {
+        if (error.message === "Network Error") {
+          toast.success("Restart Python");
+        } else {
+          console.error(error);
+          toast.error(`Error occurred: ${error.message}`);
+        }
+      });
+  };
+
+  const resetAlert = () => {
+    if (window.confirm("Are you sure to do this?\nThis also makes a backup")) {
+      reset_config();
+    }
+  };
+
+  const reset_config = () => {
+    axios
+      .get(`${HOST_IP}/reset_config`)
+      .then(() => {
+        toast.success("Reset config");
+        Restart();
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
+
+  const restoreAlert = () => {
+    if (window.confirm("Are you sure to do this?\nThis will NOT make a backup")) {
+      restore_config();
+    }
+  };
+
+  const restore_config = () => {
+    axios
+      .get(`${HOST_IP}/restore_config`)
+      .then(() => {
+        toast.success("restore config");
+        Restart();
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
+
+  const restoreOptions = () => {
+    confirmAlert({
+      title: "Reset Config Options",
+      message: "How do you want to restore config?",
+      buttons: [
+        {
+          label: "Restore backup",
+          onClick: () => restoreAlert(),
+        },
+        {
+          label: "Reset defaults",
+          onClick: () => resetAlert(),
+        },
+        {
+          label: "Cancel",
+        },
+      ],
+    });
+  };
+
   let options = timezones.map(function (timezone) {
     return { value: timezone, label: timezone };
   })
@@ -88,127 +234,158 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
     <div className="inner">
       <div className="contentContainer spacer">
         <div className="headline">Bridge Config</div>
-          <form className="add-form" onSubmit={(e) => onSubmit(e)}>
-            <div className="form-control">
-              <label>Bridge Name</label>
+        <form className="add-form" onSubmit={(e) => onSubmit(e)}>
+          <div className="form-control">
+            <label>Bridge Name</label>
+            <input
+              type="text"
+              placeholder="Bridge Name"
+              value={bridgeName}
+              onChange={(e) => setBridgeName(e.target.value)}
+            />
+          </div>
+          <div className="form-control">
+            <label>Software Version</label>
+            <input
+              type="number"
+              pattern="[0-9]+"
+              placeholder="swversion"
+              value={swversion}
+              onChange={(e) => setSwversion(e.target.value)}
+            />
+            <p>
+              <a href="https://www.philips-hue.com/en-gb/support/release-notes/bridge">
+                check here for last versions
+              </a>
+            </p>
+          </div>
+          <div className="form-control">
+            <label>API Version</label>
+            <input
+              type="text"
+              placeholder="apiversion"
+              value={apiVersion}
+              onChange={(e) => setApiVersion(e.target.value)}
+            />
+          </div>
+          <div className="form-control dropdown">
+            <label>Timezone</label>
+            <Select
+              options={options}
+              onChange={(e) => setTimezone(e.value)}
+              placeholder={timezone}
+            />
+          </div>
+          <div className="switchContainer">
+            <p>Remote API </p>
+            <label className="switch">
               <input
-                type="text"
-                placeholder="Bridge Name"
-                value={bridgeName}
-                onChange={(e) => setBridgeName(e.target.value)}
+                type="checkbox"
+                value={remoteApi}
+                checked={remoteApi}
+                onChange={(e) => setRemoteApi(e.target.checked)}
               />
-            </div>
-            <div className="form-control">
-              <label>Software Version</label>
+              <span className="slider"></span>
+            </label>
+          </div>
+          <div className="switchContainer">
+            <p>Discovery</p>
+            <label className="switch">
               <input
-                type="number"
-                pattern="[0-9]+"
-                placeholder="swversion"
-                value={swversion}
-                onChange={(e) => setSwversion(e.target.value)}
+                type="checkbox"
+                value={discovery}
+                checked={discovery}
+                onChange={(e) => setDiscovery(e.target.checked)}
               />
-              <p>
-                <a href="https://www.philips-hue.com/en-gb/support/release-notes/bridge">
-                  check here for last versions
-                </a>
-              </p>
-            </div>
-            <div className="form-control">
-              <label>API Version</label>
-              <input
-                type="text"
-                placeholder="apiversion"
-                value={apiVersion}
-                onChange={(e) => setApiVersion(e.target.value)}
-              />
-            </div>
-            <div className="form-control dropdown">
-              <label>Timezone</label>
-              <Select 
-                options={options}
-                onChange={(e) => setTimezone(e.value)}
-                placeholder={timezone}
-              />
-            </div>
-            <div className="switchContainer">
-              <p>Remote API </p>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  value={remoteApi}
-                  checked={remoteApi}
-                  onChange={(e) => setRemoteApi(e.target.checked)}
-                />
-                <span className="slider"></span>
-              </label>
-            </div>
-            <div className="switchContainer">
-              <p>Discovery</p>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  value={discovery}
-                  checked={discovery}
-                  onChange={(e) => setDiscovery(e.target.checked)}
-                />
-                <span className="slider"></span>
-              </label>
-            </div>
-            <div className="form-control">
-              <input type="submit" value="Save" className="btn btn-block" />
-            </div>
-          </form>
+              <span className="slider"></span>
+            </label>
+          </div>
+          <div className="form-control">
+            <input type="submit" value="Save" className="btn btn-block" />
+          </div>
+        </form>
       </div>
 
-      <div className="contentContainer">
+      <div className="contentContainer spacer">
         <div className="headline">Readonly Config</div>
-          <div className="form-control">
-            <label>BridgeID</label>
-            <input
-              readOnly
-              type="text"
-              placeholder="bridgeid"
-              value={readonlyConf["bridgeid"]}
-            />
-          </div>
-          <div className="form-control">
-            <label>Ip Address</label>
-            <input
-              readOnly
-              type="text"
-              placeholder="ip"
-              value={readonlyConf["ipaddress"]}
-            />
-          </div>
-          <div className="form-control">
-            <label>Mac</label>
-            <input
-              readOnly
-              type="text"
-              placeholder="mac"
-              value={readonlyConf["mac"]}
-            />
-          </div>
-          <div className="form-control">
-            <label>Local time</label>
-            <input
-              readOnly
-              type="text"
-              placeholder="time"
-              value={Date(readonlyConf["localtime"])}
-            />
-          </div>
+        <div className="form-control">
+          <label>BridgeID</label>
+          <input
+            readOnly
+            type="text"
+            placeholder="bridgeid"
+            value={readonlyConf["bridgeid"]}
+          />
+        </div>
+        <div className="form-control">
+          <label>Ip Address</label>
+          <input
+            readOnly
+            type="text"
+            placeholder="ip"
+            value={readonlyConf["ipaddress"]}
+          />
+        </div>
+        <div className="form-control">
+          <label>Mac</label>
+          <input
+            readOnly
+            type="text"
+            placeholder="mac"
+            value={readonlyConf["mac"]}
+          />
+        </div>
+        <div className="form-control">
+          <label>Local time</label>
+          <input
+            readOnly
+            type="text"
+            placeholder="time"
+            value={Date(readonlyConf["localtime"])}
+          />
+        </div>
 
-          <div className="form-control">
-              <input type="submit" value="Force Config Dump" className="btn btn-block" 
-                 onClick={() => dumpConfig()}
-              />
       </div>
 
+      <div className="contentContainer spacer">
+        <div className="headline">System debug information: (Work in progrss)</div>
+        <div className="form-control">
+          <label>Hue-Emulator Version: {diyhue}</label>
+          <label>Architecture: {machine}</label>
+          <label>OS: {sysname}</label>
+          <label>{sysname} version: {os_version}</label>
+          <label>{sysname} release: {os_release}</label>
+          <label>Hardware: %Hardware%</label>
+        </div>
+      </div>
+
+      <div className="contentContainer spacer">
+        <div className="headline">Bridge control</div>
+        <div className="form-control">
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Restart the Python code"}</p>} arrow placement="right">
+            <input type="submit" value="Restart Python" className="btn btn-block"
+              onClick={() => Restart()}
+            />
+          </Tooltip>
+        </div>
+        <div className="form-control">
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Save config to DiyHue local disk or make backup or download config.tar.gz"}</p>} arrow placement="right">
+            <input type="submit" value="Force Config Dump" className="btn btn-block"
+              onClick={() => ConfigOptions()}
+            />
+          </Tooltip>
+        </div>
+        <div className="form-control">
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Reset config to defaults or restore from DiyHue backup"}</p>} arrow placement="right">
+            <input type="submit" value="Force Config Reset" className="btn btn-block"
+              onClick={() => restoreOptions()}
+            />
+          </Tooltip>
+        </div>
       </div>
     </div>
-    
- 
+
+
   );
 };
 

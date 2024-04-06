@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
-
+import { Tooltip } from '@mui/material';
 import axios from "axios";
 import {
   FaGithub,
   FaTwitter,
   FaGlobeEurope,
-  FaSlack
+  FaSlack,
+  FaDiscourse
 } from "react-icons/fa";
+import { SiReadthedocs } from "react-icons/si";
+import { GoLightBulb } from "react-icons/go";
 import kofi from "../static/images/kofi.svg";
 
-function About() {
+const About = ({ HOST_IP, API_KEY }) => {
 
   const [contributors, setContributors] = useState([]);
 
@@ -17,7 +20,7 @@ function About() {
     axios
       .get(`https://api.github.com/repos/diyhue/diyhue/contributors?&per_page=150`)
       .then((res) => {
-          setContributors(res.data);
+        setContributors(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -29,33 +32,20 @@ function About() {
     <div className="inner">
       <div className="contentContainer">
         <div className="headline">About</div>
-        <div className="form-control">
-            <label>Debug information: (Work in progrss)</label> 
-            <textarea
-              readOnly
-              type="text"
-              placeholder="bridgeid"
-              
-            >
-              Hue-Emulator Version: %Version%
-              Architecture (Ex: x86, ARM): %Architecture%
-              OS: %OS%
-              Hardware: %Hardware%
-            </textarea>
-
-          </div>
         <div className="supportsection">
-          <p>Supported Devices:</p>
-          <a href="https://diyhue.readthedocs.io/en/latest/">Link</a>
+          <p>Usefull liks:</p>
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Read the docs"}</p>} arrow><a href="https://diyhue.readthedocs.io/en/latest/"><SiReadthedocs /></a></Tooltip>
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Main page"}</p>} arrow><a href="https://diyhue.org/"><GoLightBulb /></a></Tooltip>
         </div>
         <div className="supportsection">
           <p>Support:</p>
-          <a href="https://github.com/diyhue/diyhue"><FaGithub /></a>
-          <a href="https://diyhue.slack.com/"><FaSlack /></a>
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Github"}</p>} arrow><a href="https://github.com/diyhue/diyhue"><FaGithub /></a></Tooltip>
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Slack"}</p>} arrow><a href="https://diyhue.slack.com/"><FaSlack /></a></Tooltip>
+          <Tooltip title={<p style={{ fontSize: "18px" }}>{"Discourse"}</p>} arrow><a href="https://diyhue.discourse.group/"><FaDiscourse /></a></Tooltip>
         </div>
         <div className="supportsection">
           <p>License:</p>
-          <p>ABC</p>
+          <a href="https://github.com/diyhue/diyHue?tab=License-1-ov-file#License-1-ov-file">License on Github</a>
         </div>
         <div className="coffee">
           <p>Buy me a Coffee:</p>
@@ -125,12 +115,12 @@ function About() {
           <div className="name">Thank you!</div>
           <div className="position">A big thank you to everyone contributing to this project:</div>
           {contributors.map((contributor) => (
-          contributor.login + ", " ))}
+            contributor.login + ", "))}
         </div>
 
       </div>
-      </div>
-      
+    </div>
+
   );
 }
 
