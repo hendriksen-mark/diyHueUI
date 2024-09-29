@@ -510,7 +510,7 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
               System debug information: (Work in progress)
             </div>
             <div className="form-control">
-              <label>Hue-Emulator Version: {DebugInfo["diyhue"]}</label>
+              <label>Hue-Emulator {DebugInfo["branch"]} Version: {DebugInfo["diyhue"]}</label>
               <label>WebUI Version: {DebugInfo["webui"]}</label>
               <label>Architecture: {DebugInfo["machine"]}</label>
               <label>OS: {DebugInfo["sysname"]}</label>
