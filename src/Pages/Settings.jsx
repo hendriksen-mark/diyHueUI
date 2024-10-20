@@ -117,22 +117,6 @@ const Settings = ({ HOST_IP, API_KEY }) => {
       });
   }, [HOST_IP, API_KEY]);
 
-  const toggleEnable = (e) => {
-    setEnable(e);
-    axios
-      .put(`${HOST_IP}/api/${API_KEY}/config`, {
-        port: { enabled: e },
-      })
-      .then((fetchedData) => {
-        //console.log(fetchedData.data);
-        toast.success(`Port ${e ? "activated" : "deactivated"}`);
-      })
-      .catch((error) => {
-        console.error(error);
-        toast.error(`Error occurred: ${error.message}`);
-      });
-  };
-
   const onSubmit = () => {
     axios
       .put(`${HOST_IP}/api/${API_KEY}/config`, {
@@ -140,7 +124,6 @@ const Settings = ({ HOST_IP, API_KEY }) => {
       })
       .then((fetchedData) => {
         //console.log(fetchedData.data);
-        //console.log([port]);
         toast.success("Successfully saved");
       })
       .catch((error) => {
@@ -186,7 +169,7 @@ const Settings = ({ HOST_IP, API_KEY }) => {
               <FlipSwitch
                 id="ports"
                 value={enable}
-                onChange={(e) => toggleEnable(e)}
+                onChange={(e) => setEnable(e)}
                 checked={enable}
                 label="Enable"
                 position="right"
