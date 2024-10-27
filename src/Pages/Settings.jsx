@@ -22,6 +22,10 @@ const Settings = ({ HOST_IP, API_KEY }) => {
   const [hyperion, setHyperion] = useState(true);
   const [tpkasa, setTpkasa] = useState(true);
   const [elgato, setElgato] = useState(true);
+  const [IP_RANGE_START, setIpRangeStart] = useState(Number);
+  const [IP_RANGE_END, setIpRangeStop] = useState(Number);
+  const [SUB_IP_RANGE_START, setSubIpRangeStart] = useState(Number);
+  const [SUB_IP_RANGE_END, setSubIpRangeStop] = useState(Number);
 
   useEffect(() => {
     axios
@@ -115,6 +119,18 @@ const Settings = ({ HOST_IP, API_KEY }) => {
         console.error(error);
         toast.error(`Error occurred: ${error.message}`);
       });
+    axios
+      .get(`${HOST_IP}/api/${API_KEY}/config/IP_RANGE`)
+      .then((result) => {
+        setIpRangeStart(result.data["IP_RANGE_START"]);
+        setIpRangeStop(result.data["IP_RANGE_END"]);
+        setSubIpRangeStart(result.data["SUB_IP_RANGE_START"]);
+        setSubIpRangeStop(result.data["SUB_IP_RANGE_END"]);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
   }, [HOST_IP, API_KEY]);
 
   const onSubmit = () => {
@@ -154,6 +170,36 @@ const Settings = ({ HOST_IP, API_KEY }) => {
         toast.error(`Error occurred: ${error.message}`);
       });
   };
+
+  const onSubmit_IP = () => {
+    axios
+      .put(`${HOST_IP}/api/${API_KEY}/config`, {
+        IP_RANGE: {
+          IP_RANGE_START: IP_RANGE_START,
+          IP_RANGE_END: IP_RANGE_END,
+          SUB_IP_RANGE_START: SUB_IP_RANGE_START,
+          SUB_IP_RANGE_END: SUB_IP_RANGE_END,
+        }
+      })
+      .then((fetchedData) => {
+        //console.log(fetchedData.data);
+        toast.success("Successfully saved");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
+
+  const changeIp = (IP, type) => {
+    if (type === "start") {
+      setIpRangeStart(Number(IP.split(".")[3]))
+      setSubIpRangeStart(Number(IP.split(".")[2]))
+    } else if (type === "end") {
+      setIpRangeStop(Number(IP.split(".")[3]))
+      setSubIpRangeStop(Number(IP.split(".")[2]))
+    }
+  }
 
   return (
     <div className="inner">
@@ -196,9 +242,37 @@ const Settings = ({ HOST_IP, API_KEY }) => {
           </PageContent>
         </GlassContainer>
 
+        <GlassContainer options="spacer">
+          <PageContent>
+            <div className="headline">Search IP Range Config</div>
+            <p>Set IP range for light search.</p>
+            <GenericText
+              label={`IP Range Start (you can change ${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.xxx.yyy)`}
+              type="text"
+              value={`${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_START}.${IP_RANGE_START}`}
+              onChange={(e) => changeIp(e, "start")}
+            />
+            <GenericText
+              label={`IP Range End (you can change ${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.XXX.YYY)`}
+              type="text"
+              value={`${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_END}.${IP_RANGE_END}`}
+              onChange={(e) => changeIp(e, "end")}
+            />
+            <div className="form-control">
+              <GenericButton
+                value="Save"
+                color="blue"
+                size=""
+                type="submit"
+                onClick={() => onSubmit_IP()}
+              />
+            </div>
+          </PageContent>
+        </GlassContainer>
+
         <GlassContainer>
           <PageContent>
-            <div className="headline">Search Config</div>
+            <div className="headline">Search Protocol Config</div>
             <p>Set which protocol to find.</p>
             <form className="add-form">
               <FlipSwitch
