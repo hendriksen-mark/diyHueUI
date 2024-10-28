@@ -53,7 +53,7 @@ jobs:
         with:
           filename: DiyHueUI-release.zip
 
-      - name: Create Release
+      - name: Create and Upload Release
         id: create_release
         uses: softprops/action-gh-release@v2
         env:
@@ -61,10 +61,4 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: DiyHue UI release ${{ github.ref_name }}
-      
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
           files: DiyHueUI-release.zip
