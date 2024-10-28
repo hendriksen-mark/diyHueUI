@@ -26,6 +26,7 @@ const Settings = ({ HOST_IP, API_KEY }) => {
   const [IP_RANGE_END, setIpRangeStop] = useState(Number);
   const [SUB_IP_RANGE_START, setSubIpRangeStart] = useState(Number);
   const [SUB_IP_RANGE_END, setSubIpRangeStop] = useState(Number);
+  const [IP, setIp] = useState("")
 
   useEffect(() => {
     axios
@@ -126,6 +127,15 @@ const Settings = ({ HOST_IP, API_KEY }) => {
         setIpRangeStop(result.data["IP_RANGE_END"]);
         setSubIpRangeStart(result.data["SUB_IP_RANGE_START"]);
         setSubIpRangeStop(result.data["SUB_IP_RANGE_END"]);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+    axios
+      .get(`${HOST_IP}/api/${API_KEY}/config`)
+      .then((result) => {
+        setIp(result.data["ipaddress"]);
       })
       .catch((error) => {
         console.error(error);
@@ -247,15 +257,15 @@ const Settings = ({ HOST_IP, API_KEY }) => {
             <div className="headline">Search IP Range Config</div>
             <p>Set IP range for light search.</p>
             <GenericText
-              label={`IP Range Start (you can change ${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.xxx.yyy)`}
+              label={`IP Range Start (you can change ${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.xxx.yyy)`}
               type="text"
-              value={`${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_START}.${IP_RANGE_START}`}
+              value={`${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_START}.${IP_RANGE_START}`}
               onChange={(e) => changeIp(e, "start")}
             />
             <GenericText
-              label={`IP Range End (you can change ${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.XXX.YYY)`}
+              label={`IP Range End (you can change ${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.XXX.YYY)`}
               type="text"
-              value={`${HOST_IP.replace("http://", "").split(".")[0]}.${HOST_IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_END}.${IP_RANGE_END}`}
+              value={`${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_END}.${IP_RANGE_END}`}
               onChange={(e) => changeIp(e, "end")}
             />
             <div className="form-control">
