@@ -68,4 +68,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: DiyHueUI-release.zip
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
