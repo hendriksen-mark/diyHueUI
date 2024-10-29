@@ -566,12 +566,8 @@ const Bridge = ({ HOST_IP, API_KEY }) => {
               <label>WebUI Version: {DebugInfo["webui"]}</label>
               <label>Architecture: {DebugInfo["machine"]}</label>
               <label>OS: {DebugInfo["sysname"]}</label>
-              <label>
-                {DebugInfo["sysname"]} version: {DebugInfo["os_version"]}
-              </label>
-              <label>
-                {DebugInfo["sysname"]} release: {DebugInfo["os_release"]}
-              </label>
+              <label>{DebugInfo["sysname"]} version: {DebugInfo["os_version"]}</label>
+              <label>{DebugInfo["sysname"]} release: {DebugInfo["os_release"]}</label>
               <label>Hardware: %Hardware%</label>
             </div>
           </PageContent>
