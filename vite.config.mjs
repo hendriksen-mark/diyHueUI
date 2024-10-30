@@ -5,7 +5,6 @@ import react from '@vitejs/plugin-react-swc'
 export default defineConfig({
   base: '/',
   plugins: [react()],
-  appType: 'custom',
   server: {
     fs: {
       // Allow serving files from one level up to the project root
