@@ -14,10 +14,10 @@ const App = () => {
   const [API_KEY, setAPI_KEY] = useState();
 
   //const HOST_IP = "http://localhost"; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
-  const HOST_IP = "http://192.168.1.25"; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
+  //const HOST_IP = "http://192.168.1.25"; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
   //const HOST_IP = "http://192.168.1.11"; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
   //const HOST_IP = "http://192.168.1.3"; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
-  //const HOST_IP = ""; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
+  const HOST_IP = ""; // Pass the IP (http://x.x.x.x) of the diyHue Bridge, if running through npm start
 
   useEffect(() => {
     //console.log(`${HOST_IP}/get-key`);
