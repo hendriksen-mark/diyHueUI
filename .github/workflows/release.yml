@@ -64,3 +64,4 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: DiyHue UI release ${{ github.ref_name }}
           files: DiyHueUI-release.zip
+          make_latest: true
