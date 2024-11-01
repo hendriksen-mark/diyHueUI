@@ -4,7 +4,6 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const manifestForPlugIn = {
   registerType: 'prompt',
-  buildBase: '/assets/',
   outDir: 'dist/assets',
   includeAssests: ['favicon.ico', "logo192.png", "masked-icon.svg"],
   manifestFilename: "assets/manifest.webmanifest",
