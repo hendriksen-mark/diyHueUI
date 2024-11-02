@@ -17,19 +17,16 @@ const manifestForPlugIn = {
       src: '/assets/images/favicon.ico',
       sizes: '64x64',
       type: 'image/x-icon',
-      purpose: 'favicon'
     },
     {
       src: '/assets/images/logo192.png',
       sizes: '192x192',
       type: 'image/png',
-      purpose: 'apple touch icon',
     },
     {
       src: '/assets/images/logo512.png',
       sizes: '512x512',
       type: 'image/png',
-      purpose: 'any',
     }
     ],
     screenshots: [
