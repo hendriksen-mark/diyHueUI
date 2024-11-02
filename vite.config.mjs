@@ -15,7 +15,7 @@ const manifestForPlugIn = {
     description: "Fully configurable diyHue Emulator",
     icons: [{
       src: '/assets/images/favicon.ico',
-      sizes: '64x64 32x32 24x24 16x16',
+      sizes: '64x64',
       type: 'image/x-icon',
       purpose: 'favicon'
     },
@@ -29,7 +29,7 @@ const manifestForPlugIn = {
       src: '/assets/images/logo512.png',
       sizes: '512x512',
       type: 'image/png',
-      purpose: 'any maskable',
+      purpose: 'maskable',
     }
     ],
     screenshots: [
