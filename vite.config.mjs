@@ -31,16 +31,16 @@ const manifestForPlugIn = {
     ],
     screenshots: [
       {
-        src: "/assets/images/screenshot_desktop.jpg",
+        src: "/assets/images/screenshot_desktop.webp",
         sizes: "2556x1238",
-        type: "image/jpg",
+        type: "image/webp",
         form_factor: "wide",
         label: "DIYHue App"
       },
       {
-        src: "/assets/images/screenshot_mobile.jpg",
+        src: "/assets/images/screenshot_mobile.webp",
         sizes: "1179x2379",
-        type: "image/jpg",
+        type: "image/webp",
         form_factor: "narrow",
         label: "DIYHue App"
       }
@@ -50,6 +50,7 @@ const manifestForPlugIn = {
     display: "standalone",
     scope: '/',
     start_url: "/",
+    id: "/",
     orientation: 'portrait'
   }
 }
