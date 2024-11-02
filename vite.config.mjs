@@ -4,10 +4,11 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const manifestForPlugIn = {
   registerType: 'prompt',
+  outDir: 'dist/assets',
   includeAssests: ['favicon.ico', "logo192.png", "masked-icon.svg"],
   manifestFilename: "assets/manifest.webmanifest",
   FILE_SW_REGISTER: "assets/registerSW.js",
-  filename: "assets/sw.js",
+  //filename: "assets/sw.js",
   manifest: {
     name: "DIYHue Webapp",
     short_name: "DIYHue",
