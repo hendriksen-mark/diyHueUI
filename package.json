@@ -30,7 +30,6 @@
     "@vitejs/plugin-react-swc": "^3.7.1",
     "vite-plugin-svgr": "^4.2.0",
     "vite-jsconfig-paths": "^2.0.1",
-    "vite-plugin-pwa": "git+https://github.com/hendriksen-mark/vite-plugin-pwa.git",
     "lodash.debounce": "^4.0.8",
     "web-vitals": "^4.2.4"
   },
