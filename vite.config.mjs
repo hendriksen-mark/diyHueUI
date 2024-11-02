@@ -29,7 +29,7 @@ const manifestForPlugIn = {
       src: '/assets/images/logo512.png',
       sizes: '512x512',
       type: 'image/png',
-      purpose: 'maskable',
+      purpose: 'any',
     }
     ],
     screenshots: [
