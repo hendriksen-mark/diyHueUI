@@ -11,7 +11,7 @@ import PageContent from "../components/PageContent/PageContent";
 import CardGrid from "../components/CardGrid/CardGrid";
 
 const Settings = ({ HOST_IP, API_KEY }) => {
-  const [enable, setEnable] = useState(false);
+  const [port_enable, setPort_Enable] = useState(false);
   const [port, setPort] = useState("80");
   const [yeelight, setYeelight] = useState(true);
   const [native_multi, setNative_multi] = useState(true);
@@ -26,7 +26,8 @@ const Settings = ({ HOST_IP, API_KEY }) => {
   const [IP_RANGE_END, setIpRangeStop] = useState(Number);
   const [SUB_IP_RANGE_START, setSubIpRangeStart] = useState(Number);
   const [SUB_IP_RANGE_END, setSubIpRangeStop] = useState(Number);
-  const [IP, setIp] = useState("")
+  const [IP, setIp] = useState("");
+  const [ScanOnHostIP, setScanOnHostIP] = useState("");
 
   useEffect(() => {
     axios
@@ -135,7 +136,16 @@ const Settings = ({ HOST_IP, API_KEY }) => {
     axios
       .get(`${HOST_IP}/api/${API_KEY}/config`)
       .then((result) => {
-        setIp(result.data["ipaddress"]);
+        setIp(result.data["ipaddress"].replace("http://", ""));
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+    axios
+      .get(`${HOST_IP}/api/${API_KEY}/config/scanonhostip`)
+      .then((result) => {
+        setScanOnHostIP(result.data);
       })
       .catch((error) => {
         console.error(error);
@@ -146,7 +156,7 @@ const Settings = ({ HOST_IP, API_KEY }) => {
   const onSubmit = () => {
     axios
       .put(`${HOST_IP}/api/${API_KEY}/config`, {
-        port: { enabled: enable, ports: port.toString().match(/\d+/g).map(Number) },
+        port: { enabled: port_enable, ports: port.toString().match(/\d+/g).map(Number) },
       })
       .then((fetchedData) => {
         //console.log(fetchedData.data);
@@ -209,7 +219,22 @@ const Settings = ({ HOST_IP, API_KEY }) => {
       setIpRangeStop(Number(IP.split(".")[3]))
       setSubIpRangeStop(Number(IP.split(".")[2]))
     }
-  }
+  };
+
+  const onSubmit_ScanOnHostIP = () => {
+    axios
+      .put(`${HOST_IP}/api/${API_KEY}/config`, {
+        scanonhostip: ScanOnHostIP
+      })
+      .then((fetchedData) => {
+        //console.log(fetchedData.data);
+        toast.success("Successfully saved");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error(`Error occurred: ${error.message}`);
+      });
+  };
 
   return (
     <div className="inner">
@@ -224,9 +249,9 @@ const Settings = ({ HOST_IP, API_KEY }) => {
             <form className="add-form">
               <FlipSwitch
                 id="ports"
-                value={enable}
-                onChange={(e) => setEnable(e)}
-                checked={enable}
+                value={port_enable}
+                onChange={(e) => setPort_Enable(e)}
+                checked={port_enable}
                 label="Enable"
                 position="right"
               />
@@ -257,15 +282,15 @@ const Settings = ({ HOST_IP, API_KEY }) => {
             <div className="headline">Search IP Range Config</div>
             <p>Set IP range for light search.</p>
             <GenericText
-              label={`IP Range Start (you can change ${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.xxx.yyy)`}
+              label={`IP Range Start (you can change ${IP.split(".")[0]}.${IP.split(".")[1]}.xxx.yyy)`}
               type="text"
-              value={`${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_START}.${IP_RANGE_START}`}
+              value={`${IP.split(".")[0]}.${IP.split(".")[1]}.${SUB_IP_RANGE_START}.${IP_RANGE_START}`}
               onChange={(e) => changeIp(e, "start")}
             />
             <GenericText
-              label={`IP Range End (you can change ${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.XXX.YYY)`}
+              label={`IP Range End (you can change ${IP.split(".")[0]}.${IP.split(".")[1]}.XXX.YYY)`}
               type="text"
-              value={`${IP.replace("http://", "").split(".")[0]}.${IP.replace("http://", "").split(".")[1]}.${SUB_IP_RANGE_END}.${IP_RANGE_END}`}
+              value={`${IP.split(".")[0]}.${IP.split(".")[1]}.${SUB_IP_RANGE_END}.${IP_RANGE_END}`}
               onChange={(e) => changeIp(e, "end")}
             />
             <div className="form-control">
@@ -280,7 +305,7 @@ const Settings = ({ HOST_IP, API_KEY }) => {
           </PageContent>
         </GlassContainer>
 
-        <GlassContainer>
+        <GlassContainer options="spacer">
           <PageContent>
             <div className="headline">Search Protocol Config</div>
             <p>Set which protocol to find.</p>
@@ -375,6 +400,32 @@ const Settings = ({ HOST_IP, API_KEY }) => {
                 />
               </div>
             </form>
+          </PageContent>
+        </GlassContainer>
+
+        <GlassContainer options="spacer">
+          <PageContent>
+            <div className="headline">Search on host IP</div>
+            <p>Set to search on host IP.</p>
+            <form className="add-form">
+              <FlipSwitch
+                id="ScanOnHostIP"
+                value={ScanOnHostIP}
+                onChange={(e) => setScanOnHostIP(e)}
+                checked={ScanOnHostIP}
+                label="Enable"
+                position="right"
+              />
+            </form>
+            <div className="form-control">
+              <GenericButton
+                value="Save"
+                color="blue"
+                size=""
+                type="submit"
+                onClick={() => onSubmit_ScanOnHostIP()}
+              />
+            </div>
           </PageContent>
         </GlassContainer>
       </CardGrid>
