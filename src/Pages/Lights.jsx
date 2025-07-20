@@ -62,23 +62,21 @@ export default function Lights({ HOST_IP, API_KEY, CONFIG }) {
     setLights(CONFIG.lights);
 
     const fetchLightsCatalog = () => {
-      if (API_KEY !== undefined) {
-        axios
-          .get(
-            `https://raw.githubusercontent.com/diyhue/Lights/master/catalog.json`
-          )
-          .then((fetchedData) => {
-            //console.log(fetchedData.data);
-            setlightsCatalog(fetchedData.data);
-          })
-          .catch((error) => {
-            console.error(error);
-            toast.error(`Error occurred: ${error.message}`);
-          });
-      }
+      axios
+        .get(
+          `https://raw.githubusercontent.com/diyhue/Lights/master/catalog.json`
+        )
+        .then((fetchedData) => {
+          //console.log(fetchedData.data);
+          setlightsCatalog(fetchedData.data);
+        })
+        .catch((error) => {
+          console.error(error);
+          toast.error(`Error occurred: ${error.message}`);
+        });
     };
     fetchLightsCatalog();
-  }, [HOST_IP, API_KEY, CONFIG]);
+  }, [CONFIG]);
 // #region HTML
   return (
     <div className="content">
