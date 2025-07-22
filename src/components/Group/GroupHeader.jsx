@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 
 import axios from "axios";
-import debounce from "lodash.debounce";
 import { AnimatePresence } from "framer-motion";
 
 import BrightnessSlider from "../BrightnessSlider/BrightnessSlider";
@@ -47,16 +46,6 @@ const GroupHeader = ({ HOST_IP, api_key, id, group, lights }) => {
       return onLights + " lights on";
     }
   };
-
-  const debouncedHandleBriChange = debounce(handleBriChange, 300);
-
-  const debouncedChangeHandler = useCallback(
-    (value) => {
-      debouncedHandleBriChange(value);
-    },
-    // eslint-disable-next-line
-    []
-  );
 // #region HTML
   return (
     <>
@@ -80,7 +69,7 @@ const GroupHeader = ({ HOST_IP, api_key, id, group, lights }) => {
           {groupState["any_on"] && (
             <BrightnessSlider
               defaultValue={groupState["avr_bri"]}
-              onChange={debouncedHandleBriChange}
+              onChange={(e) => {handleBriChange(e)}}
               max={100}
             />
           )}
