@@ -25,6 +25,14 @@
       animation: updating ease-in-out 1s infinite alternate;
     }
 
+    .transferring {
+      width: 10px;
+      height: 2px;
+      background: #fff;
+      border-radius: 5px;
+      animation: transferring ease-in-out 1s infinite alternate;
+    }
+
     svg {
       fill: #fff;
       height: 100%;

@@ -56,6 +56,8 @@ const NotificationCenter = ({HOST_IP, API_KEY, updating, notifications, CONFIG }
       return "No Update";
     } else if (state === "installing") {
       return "installing...";
+    } else if (state === "transferring") {
+      return "transferring...";
     }
   };
 
@@ -66,6 +68,8 @@ const NotificationCenter = ({HOST_IP, API_KEY, updating, notifications, CONFIG }
       return "updatebtn check";
     } else if (state === "installing") {
       return "updatebtn install";
+    } else if (state === "transferring") {
+      return "updatebtn transferring";
     }
   };
 
@@ -76,6 +80,8 @@ const NotificationCenter = ({HOST_IP, API_KEY, updating, notifications, CONFIG }
       return "Check for update";
     } else if (state === "installing") {
       return "Update is installing";
+    } else if (state === "transferring") {
+      return "Update is transferring";
     }
   };
 
@@ -113,6 +119,7 @@ const NotificationCenter = ({HOST_IP, API_KEY, updating, notifications, CONFIG }
         <FaBell />
         {(swstate === "anyreadytoinstall" || swstate === "allreadytoinstall") && <div className="notificationDot"></div>}
         {swstate === "installing" && <div className="updating"></div>}
+        {swstate === "transferring" && <div className="transferring"></div>}
       </div>
       <Wizard
         isOpen={WizardIsOpen}
