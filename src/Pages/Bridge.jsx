@@ -38,8 +38,22 @@ const Bridge = ({ HOST_IP, API_KEY, CONFIG }) => {
   const [AdvanceConfig, setAdvanceConfig] = useState(false);
   const [readonlyConf, setReadonlyConf] = useState(CONFIG.config);
   const [isModified, setIsModified] = useState(false); // Track user modifications
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [branch, setBranch] = useState(CONFIG.config["branch"]);
 
   useEffect(() => {
+    axios
+      .get("https://api.github.com/repos/hendriksen-mark/diyhue/branches")
+      .then((response) => {
+        const options = response.data.map((branch) => ({
+          value: branch.name,
+          label: branch.name,
+        }));
+        setBranchOptions(options);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch branches:", error);
+      });
     if (!isModified) {
       setBridgeName(CONFIG.config["name"]);
       setSwversion(CONFIG.config["swversion"]);
@@ -48,6 +62,7 @@ const Bridge = ({ HOST_IP, API_KEY, CONFIG }) => {
       setDiscovery(CONFIG.config["discovery"]);
       setTimezone(CONFIG.config["timezone"]);
       setLogLevel(CONFIG.config["LogLevel"]);
+      setBranch(CONFIG.config["branch"]);
       setReadonlyConf(CONFIG.config);
     }
   }, [CONFIG, isModified]);
@@ -87,6 +102,11 @@ const Bridge = ({ HOST_IP, API_KEY, CONFIG }) => {
     setIsModified(true); // Mark as modified
   };
 
+  const handleBranchChange = (value) => {
+    setBranch(value);
+    setIsModified(true); // Mark as modified
+  };
+
   const openWizard = () => {
     setWizardIsOpen(true);
   };
@@ -107,6 +127,7 @@ const Bridge = ({ HOST_IP, API_KEY, CONFIG }) => {
         "Remote API enabled": remoteApi,
         discovery: discovery,
         loglevel: LogLevel,
+        branch: branch,
       })
       .then((fetchedData) => {
         //console.log(fetchedData.data);
@@ -469,7 +490,16 @@ const Bridge = ({ HOST_IP, API_KEY, CONFIG }) => {
                 label={`Timezone (suggested: ${clientTimezone})`}
                 options={options}
                 onChange={(e) => handleTimezoneChange(e.value)}
-                placeholder={timezone}
+                value={options.find(opt => opt.value === timezone)}
+              />
+            </div>
+            <div className="form-control">
+              <SelectMenu
+                label="Branch"
+                options={branchOptions}
+                value={branchOptions.find(opt => opt.value === branch)}
+                placeholder="Select branch"
+                onChange={(e) => handleBranchChange(e.value)}
               />
             </div>
             <div className="form-control">
