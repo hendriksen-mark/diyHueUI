@@ -35,6 +35,18 @@
   backdrop-filter: blur(20px);
   background: rgba(0, 0, 0, 0.2);
 
+  .cpuTemp {
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+
+    p {
+      color: #ccc;
+      margin: 15px 15px;
+    }
+  }
+
   .onbtn {
     margin-right: 10px;
     display: flex;

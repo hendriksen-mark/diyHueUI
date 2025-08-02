@@ -60,6 +60,10 @@ const HeaderSection = ({ HOST_IP, showSidebar, setShowSidebar, API_KEY, CONFIG, 
         <FaBars />
       </motion.div>
 
+      <div className="cpuTemp">
+        <p>CPU Temperature: {CONFIG?.info.pi_temp}°C</p>
+      </div>
+
       <NotificationCenter
         notifications={true}
         updating={true}
