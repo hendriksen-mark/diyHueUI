@@ -15,13 +15,9 @@ jobs:
     name: Build Project
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install dependencies
         run: npm install    
@@ -33,7 +29,7 @@ jobs:
       
       # Share artifact inside workflow
       - name: Share artifact inside workflow
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: DiyHueUI
           path: |
