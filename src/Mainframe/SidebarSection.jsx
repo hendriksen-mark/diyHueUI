@@ -2,18 +2,16 @@ import { useState } from "react";
 
 import { motion, AnimatePresence } from "framer-motion";
 import { FaHome, FaLightbulb, FaLink, FaCog, FaSignOutAlt, FaInfoCircle, FaExclamationTriangle, FaUser, FaCode, FaTerminal } from "react-icons/fa";
-import { SiHomeassistant } from "react-icons/si";
+import { SiHomeassistant, SiZigbee2Mqtt } from "react-icons/si";
 import { MdSettingsRemote } from "react-icons/md";
 import { IoExtensionPuzzle } from "react-icons/io5";
 import { PiUserListFill, PiGameControllerFill } from "react-icons/pi";
 import { BsFillLightningFill } from "react-icons/bs";
+import { ShDiyhueDark, ShPhilipsHueDark } from 'react-icons/sh';
 
-import { Bridge } from "../static/icons/Bridge";
 import { Deconz } from "../static/icons/Deconz";
-import { Diybridge } from "../static/icons/Diybridge";
 import { SubMenu } from "../components/MenuItem/MenuItem";
 import { Tradfri } from "../static/icons/Tradfri";
-import { Zigbee } from "../static/icons/Zigbee";
 import { Govee } from "../static/icons/Govee";
 import logo from "../static/images/logo.svg";
 
@@ -39,9 +37,9 @@ const SidebarSection = ({ showSidebar, setShowSidebar, isMobile }) => {
     { label: "Entertainment", icon: PiGameControllerFill, link: "#entertainment" },
     {
       label: "DiyHue",
-      icon: Diybridge,
+      icon: ShDiyhueDark,
       subItems: [
-        { label: "Bridge", icon: Diybridge, link: "#bridge" },
+        { label: "Bridge", icon: ShDiyhueDark, link: "#bridge" },
         { label: "Link button", icon: FaLink, link: "#linkbutton" },
         { label: "App Users", icon: PiUserListFill, link: "#users" },
         { label: "Alarm", icon: FaExclamationTriangle, link: "#alarm" },
@@ -54,11 +52,11 @@ const SidebarSection = ({ showSidebar, setShowSidebar, isMobile }) => {
       label: "Addons",
       icon: IoExtensionPuzzle,
       subItems: [
-        { label: "MQTT", icon: Zigbee, link: "#mqtt" },
+        { label: "MQTT", icon: SiZigbee2Mqtt, link: "#mqtt" },
         { label: "HA", icon: SiHomeassistant, link: "#ha" },
         { label: "Tradfri", icon: Tradfri, link: "#tradfri" },
         { label: "Deconz", icon: Deconz, link: "#deconz" },
-        { label: "Phillips", icon: Bridge, link: "#phillips" },
+        { label: "Phillips", icon: ShPhilipsHueDark, link: "#phillips" },
         { label: "Govee", icon: Govee, link: "#govee" },
       ],
     },
