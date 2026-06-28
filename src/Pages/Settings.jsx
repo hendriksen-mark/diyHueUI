@@ -37,6 +37,7 @@ const Settings = ({ HOST_IP, API_KEY, CONFIG }) => {
     SUB_IP_RANGE_END: CONFIG.config.IP_RANGE.SUB_IP_RANGE_END,
   });
 
+  const [entertainment_fps, setEntertainmentFps] = useState(CONFIG.config.entertainment_fps);
   const [scanOnHostIP, setScanOnHostIP] = useState(CONFIG.config.scanonhostip);
   const [ip, setIp] = useState(CONFIG.config.ipaddress.replace("http://", ""));
 
@@ -63,6 +64,7 @@ const Settings = ({ HOST_IP, API_KEY, CONFIG }) => {
         SUB_IP_RANGE_START: CONFIG.config.IP_RANGE.SUB_IP_RANGE_START,
         SUB_IP_RANGE_END: CONFIG.config.IP_RANGE.SUB_IP_RANGE_END,
       });
+      setEntertainmentFps(CONFIG.config.entertainment_fps);
       setScanOnHostIP(CONFIG.config.scanonhostip);
       setIp(CONFIG.config.ipaddress.replace("http://", ""));
     }
@@ -117,6 +119,13 @@ const Settings = ({ HOST_IP, API_KEY, CONFIG }) => {
       "IP range configuration saved successfully"
     );
   };
+
+  const onSubmitEntertainmentFps = () => {
+    submitConfig(
+      { entertainment_fps: entertainment_fps },
+      "Entertainment FPS configuration saved successfully"
+    );
+  }
 
   const onSubmitScanOnHostIP = () => {
     submitConfig(
@@ -246,6 +255,28 @@ const Settings = ({ HOST_IP, API_KEY, CONFIG }) => {
                 onClick={onSubmitScanOnHostIP}
               />
             </form>
+          </PageContent>
+        </GlassContainer>
+
+        <GlassContainer options="spacer">
+          <PageContent>
+            <div className="headline">Entertainment FPS</div>
+            <p>Set the FPS for entertainment mode.</p>
+            <GenericText
+              label="FPS"
+              type="number"
+              value={entertainment_fps}
+              onChange={(e) => setEntertainmentFps(e)}
+            />
+            <div className="form-control">
+              <GenericButton
+                value="Save"
+                color="blue"
+                size=""
+                type="submit"
+                onClick={onSubmitEntertainmentFps}
+              />
+            </div>
           </PageContent>
         </GlassContainer>
       </CardGrid>
