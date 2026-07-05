@@ -1,6 +1,6 @@
 import './Loader.scss';
 
-const loading = (additionalText) => (
+const Loading = ({ additionalText }) => (
     <div className="loading-container">
         <div className="spinner">
             <div className="double-bounce1"></div>
@@ -11,4 +11,4 @@ const loading = (additionalText) => (
     </div>
 );
 
-export default loading;
+export default Loading;

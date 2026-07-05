@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import ContentSection from "./ContentSection";
 import SidebarSection from "./SidebarSection";
 import HeaderSection from "./HeaderSection";
-import loading from "../components/Loader/Loader";
+import Loading from "../components/Loader/Loader";
 
 import "./layout.scss";
 import "./scrollbar.scss";
@@ -69,7 +69,7 @@ const Layout = ({ HOST_IP, API_KEY }) => {
   }, [API_KEY]);
 
   if (isLoading) {
-    return loading("Config"); // Show loading spinner while fetching CONFIG data
+    return <Loading additionalText="Config" />; // Show loading spinner while fetching CONFIG data
   }
 // #region HTML
   return (

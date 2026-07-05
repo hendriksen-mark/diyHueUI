@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 
 import Layout from "./Mainframe/Layout";
-import loading from "./components/Loader/Loader";
+import Loading from "./components/Loader/Loader";
 
 const App = () => {
   const [API_KEY, setAPI_KEY] = useState(""); // Initialize API_KEY with an empty string
@@ -34,7 +34,7 @@ const App = () => {
   }, []);
 
   if (isLoading) {
-    return loading("API KEY"); // Show loading spinner while fetching API_KEY
+    return <Loading additionalText="API KEY" />; // Show loading spinner while fetching API_KEY
   }
 
   if (!API_KEY || API_KEY.length !== 32) {

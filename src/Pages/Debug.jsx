@@ -7,6 +7,8 @@ import { GenericText, GenericTextArea } from "../components/GenericText/GenericT
 import FlipSwitch from "../components/FlipSwitch/FlipSwitch";
 import TextButton from "../components/TextButton/TextButton";
 import confirmAlert from "../components/reactConfirmAlert/reactConfirmAlert";
+import GenericButton from "../components/GenericButton/GenericButton";
+import { toast } from "react-hot-toast";
 
 const Debug = ({ HOST_IP, API_KEY }) => {
     const [url, setUrl] = useState("/groups");
@@ -158,6 +160,24 @@ const Debug = ({ HOST_IP, API_KEY }) => {
         setStreamAbortController(null);
     };
 
+    const onTestClick = () => {
+        axios
+            .get(`${HOST_IP}/api/${API_KEY}/aiohue_test`)
+            .then((result) => {
+                if (result.data && result.data.message === "aiohue test successful") {
+                    toast.success("Test successful");
+                    console.log(`AIOHue test successful, found ${result.data.devices.length} devices.`);
+                } else {
+                    toast.error("Test failed, check log for details");
+                    console.error("AIOHue test failed:", result.data);
+                }
+            })
+            .catch((error) => {
+                toast.error("Test failed, check log for details");
+                console.error("AIOHue test error:", error);
+            });
+    };
+
     if (!confirmed) {
         return null;
     }
@@ -165,6 +185,25 @@ const Debug = ({ HOST_IP, API_KEY }) => {
     return (
         <div className="inner">
             <CardGrid options="main">
+                <GlassContainer options="spacer">
+                    <PageContent>
+                        <div>
+                            <div className="headline">AIOHue tester</div>
+                            <p>
+                                Use this if you find problems with 3rd party integrations.
+                            </p>
+                            <div className="form-control">
+                                <GenericButton
+                                    value="Test"
+                                    color="blue"
+                                    size=""
+                                    type="submit"
+                                    onClick={onTestClick}
+                                />
+                            </div>
+                        </div>
+                    </PageContent>
+                </GlassContainer>
                 <GlassContainer options="spacer">
                     <PageContent>
                         <div>
